@@ -2,6 +2,7 @@ var express = require("express");
 var app = express();
 
 app.set("view engine", "ejs");
+app.use(express.static(__dirname));  //need this line to route to subfolders in local drive
 
 app.get("/", function(req, res){
     res.render("landing");
@@ -9,12 +10,16 @@ app.get("/", function(req, res){
 
 app.get("/campgrounds", function(req, res){
     var campgrounds = [
-        {name: "Salmon Creek", image: "https://pixabay.com/get/57e2d54b4852ad14f6da8c7dda793f7f1636dfe2564c704c732b7fdc9745c151_340.jpg"},
-        {name: "Granite Hill", image: "https://pixabay.com/get/57e8d0424a5bae14f6da8c7dda793f7f1636dfe2564c704c732b7fdc9745c151_340.jpg"},
-        {name: "Mountain Goat's Rest", image: "https://pixabay.com/get/50e9d4474856b108f5d084609620367d1c3ed9e04e50744f712b72d29349c1_340.jpg"}
+        {name: "Salmon Creek", image: "https://cdn.pixabay.com/photo/2016/11/21/15/14/camping-1845906__340.jpg"},
+        {name: "Granite Hill", image: "https://cdn.pixabay.com/photo/2016/11/22/23/08/adventure-1851092__340.jpg"},
+        {name: "Mountain Goat's Rest", image: "https://cdn.pixabay.com/photo/2015/03/26/10/29/camping-691424__340.jpg"}
     ]
 
     res.render("campgrounds", {campgrounds:campgrounds});
+});
+
+app.post("/campgrounds", function(req, res){
+    res.send("You hit the post page!")
 });
 
 app.listen(3000, function(){

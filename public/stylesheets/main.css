@@ -1,0 +1,11 @@
+div.thumbnail {
+    padding: 0;
+}
+
+img.img-responsive {
+    width: 100%;
+}
+
+div.caption-full {
+    padding: 9px;
+}

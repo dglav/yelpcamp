@@ -24,7 +24,7 @@ function seedDB(){
 
     //remove campgrounds
     Campground.deleteMany({}, function(err){
-        if (err) { 
+        if (err) {
             console.log(err);
         } else {
             console.log("Removed campgrounds");

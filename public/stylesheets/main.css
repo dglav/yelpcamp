@@ -9,3 +9,7 @@ img.img-responsive {
 div.caption-full {
     padding: 9px;
 }
+
+#newComment {
+    text-align: center;
+}

@@ -20,17 +20,21 @@ router.post("/", isLoggedIn, function(req, res){
             res.redirect("/campgrounds");
         } else {
             Comment.create({
-                author: req.body.comment.author,
+                author: {
+                    id: req.user._id,
+                    username: req.user.username
+                },
                 text: req.body.comment.text
             }, function(err, comment){
                 if (err) {
                     console.log(err);
                 } else {
+                    console.log(comment);
                     campground.comments.push(comment);
                     campground.save();
                     res.redirect("/campgrounds/" + req.params.id);
                 }
-            })
+            });
         }
     });
 });

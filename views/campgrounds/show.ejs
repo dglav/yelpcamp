@@ -17,11 +17,14 @@
                     <h4 class="pull-right">$9.00/night</h4>
                     <h4><a href="#"><%= campground.name %></a></h4>
                     <p><%= campground.description %></p>
+                    <p>
+                        <em>Submitted by <%= campground.author.username %></em>
+                    </p>
                 </div>
             </div>
             <div class="well">
-                <div class="row">
-                    <a class="btn btn-success pull-right" href="/campgrounds/<%= campground._id %>/comments/new">Add New Comment</a>
+                <div class="row" id="newComment">
+                    <a class="btn btn-success" href="/campgrounds/<%= campground._id %>/comments/new">Add New Comment</a>
                 </div>
                 <hr>
                 <% campground.comments.forEach(comment => { %>
@@ -29,7 +32,7 @@
                         <div class="pull-right">
                             <span>10 days ago</span>
                         </div>
-                        <p><strong><%= comment.author %></strong></p>
+                        <p><strong><%= comment.author.username %></strong></p>
                         <p><%= comment.text %></p>
                     </div>
                 <% }); %>

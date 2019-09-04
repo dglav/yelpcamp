@@ -10,8 +10,13 @@ var express     = require("express"),
     mongoose    = require("mongoose"),
     passport    = require("passport"),
     LocalStrategy = require("passport-local"),
+    methodOverride = require("method-override");
     User        = require("./models/user"),
     seedDB      = require("./seeds");
+
+var indexRoutes         = require("./routes/index"),
+    campgroundRoutes    = require("./routes/campgrounds"),
+    commentRoutes       = require("./routes/comments");
 
 mongoose.connect("mongodb://localhost/yelp_camp", { useNewUrlParser: true });
 app.use(bodyParser.urlencoded({extended: true}));
@@ -19,7 +24,7 @@ app.set("view engine", "ejs");
 app.use(express.static(__dirname));
 // seedDB();
 
-// Passport Configuration
+// Auth Configuration
 app.use(require("express-session")({
     secret: "mindtrips are trippy",
     resave: false,
@@ -32,15 +37,16 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+// Allow for PUT and DELETE routes
+app.use(methodOverride("_method"));
+
+// Make current user a global variable in locals
 app.use(function(req, res, next){
     res.locals.currentUser = req.user;
     next();
 });
 
-var indexRoutes         = require("./routes/index"),
-    campgroundRoutes    = require("./routes/campgrounds"),
-    commentRoutes       = require("./routes/comments");
-
+// Allow for shorter routes in each of the routes files below
 app.use("/", indexRoutes);
 app.use("/campgrounds", campgroundRoutes);
 app.use("/campgrounds/:id/comments", commentRoutes);

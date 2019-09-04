@@ -13,3 +13,7 @@ div.caption-full {
 #newComment {
     text-align: center;
 }
+
+#delete-form {
+    display: inline;
+}

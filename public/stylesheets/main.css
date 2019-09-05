@@ -14,6 +14,6 @@ div.caption-full {
     text-align: center;
 }
 
-#delete-form {
+.delete-form {
     display: inline;
 }

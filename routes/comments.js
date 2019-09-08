@@ -28,10 +28,12 @@ router.post("/", middleware.isLoggedIn, function(req, res){
                 text: req.body.comment.text
             }, function(err, comment){
                 if (err) {
+                    req.flash("error", "Something went wrong.");
                     console.log(err);
                 } else {
                     campground.comments.push(comment);
                     campground.save();
+                    req.flash("success", "Successfully added comment!");
                     res.redirect("/campgrounds/" + req.params.id);
                 }
             });
@@ -56,11 +58,10 @@ router.get("/:comment_id/edit", middleware.checkCommentOwnership, function(req, 
 router.put("/:comment_id", middleware.checkCommentOwnership, function(req, res){
     Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment, function(err, updatedComment){
         if (err) {
+            req.flash("error", "Something went wrong.");
             console.log(err);
-        } else {
-            console.log(updatedComment);
-            res.redirect("/campgrounds/" + req.params.id);
         }
+        res.redirect("/campgrounds/" + req.params.id);
     });
 });
 
@@ -69,6 +70,7 @@ router.delete("/:comment_id", middleware.checkCommentOwnership, function(req, re
     // Delete association to comment
     Campground.findById(req.params.id, function(err, foundCampground){
         if (err) {
+            req.flash("error", "Something went wrong.");
             console.log(err);
         } else {
             foundCampground.comments = foundCampground.comments.filter(function(value, index, arr){
@@ -79,8 +81,10 @@ router.delete("/:comment_id", middleware.checkCommentOwnership, function(req, re
             // Delete comment itself
             Comment.findByIdAndDelete(req.params.comment_id, function(err){
                 if (err) {
+                    req.flash("error", "Something went wrong.");
                     res.redirect("back");
                 } else {
+                    req.flash("success", "Comment deleted.");
                     res.redirect("/campgrounds/" + req.params.id);
                 }
             });

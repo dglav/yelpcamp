@@ -32,7 +32,9 @@ router.post("/", middleware.isLoggedIn, function(req, res){
     Campground.create(newCampground, (err, newCampground) => {
         if (err) {
             console.log(err);
+            req.flash("error", "Something went wrong.");
         } else {
+            req.flash("success", "Added campground!");
             res.redirect("/campgrounds");
         }
     });
@@ -42,6 +44,8 @@ router.get("/:id", function(req, res){
     Campground.findById(req.params.id).populate("comments").exec(function(err, foundCampground){
         if (err) {
             console.log(err);
+            req.flash("error", err.message);
+            res.redirect("/campgrounds");
         } else {
             res.render("campgrounds/show", {campground: foundCampground});
         }
@@ -63,9 +67,11 @@ router.get("/:id/edit", middleware.checkCampgroundOwnership, function(req, res){
 router.put("/:id", middleware.checkCampgroundOwnership, function(req, res){
     Campground.updateOne({ _id: req.params.id }, req.body.campground, function(err){
         if (err) {
+            req.flash("error", "Something went wrong.");
             console.log(err);
         } else {
             // update
+            req.flash("success", "Successfully edited campground!");
             res.redirect("/campgrounds/" + req.params.id);
         }
     })

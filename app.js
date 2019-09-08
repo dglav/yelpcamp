@@ -10,7 +10,8 @@ var express     = require("express"),
     mongoose    = require("mongoose"),
     passport    = require("passport"),
     LocalStrategy = require("passport-local"),
-    methodOverride = require("method-override");
+    methodOverride = require("method-override"),
+    flash       = require("connect-flash"),
     User        = require("./models/user"),
     seedDB      = require("./seeds");
 
@@ -22,6 +23,7 @@ mongoose.connect("mongodb://localhost/yelp_camp", { useNewUrlParser: true });
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.use(express.static(__dirname));
+app.use(flash());
 // seedDB();
 
 // Auth Configuration
@@ -43,6 +45,8 @@ app.use(methodOverride("_method"));
 // Make current user a global variable in locals
 app.use(function(req, res, next){
     res.locals.currentUser = req.user;
+    res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
     next();
 });
 

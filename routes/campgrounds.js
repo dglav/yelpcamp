@@ -6,12 +6,13 @@ var middleware = require("../middleware");
 
 // Campground root page
 router.get("/", function(req, res){
+    res.render("campgrounds/index", { campgrounds:allCampgrounds, currentUser:req.user })
     // Get all campgrounds from db
     Campground.find({}, (err, allCampgrounds) => {
         if (err) {
             console.log(err);
         } else {
-            res.render("campgrounds/index", { campgrounds:allCampgrounds, currentUser:req.user });
+            res.redirect("campgrounds/index", { campgrounds:allCampgrounds, currentUser:req.user });
         }
     });
 });

@@ -4,6 +4,7 @@ var Campground = require("../models/campground");
 var Comment = require("../models/comment");
 var middleware = require("../middleware");
 
+// Campground root page
 router.get("/", function(req, res){
     // Get all campgrounds from db
     Campground.find({}, (err, allCampgrounds) => {
@@ -15,13 +16,16 @@ router.get("/", function(req, res){
     });
 });
 
+// New campground form
 router.get("/new", middleware.isLoggedIn, function(req, res){
     res.render("campgrounds/new");
 });
 
+// New campground post route
 router.post("/", middleware.isLoggedIn, function(req, res){
     var newCampground = {
         name: req.body.name, 
+        price: req.body.price,
         image: req.body.image, 
         description: req.body.description,
         author: {
@@ -40,6 +44,7 @@ router.post("/", middleware.isLoggedIn, function(req, res){
     });
 });
 
+// Show Details
 router.get("/:id", function(req, res){
     Campground.findById(req.params.id).populate("comments").exec(function(err, foundCampground){
         if (err) {

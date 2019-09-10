@@ -1,3 +1,5 @@
+/* CAMPGROUNDS */
+
 div.thumbnail {
     padding: 0;
 }
@@ -10,10 +12,28 @@ div.caption-full {
     padding: 9px;
 }
 
+/* COMMENTS */
+
 #newComment {
     text-align: center;
 }
 
+/* FORMS */
+
 .delete-form {
     display: inline;
+}
+
+.custom-form {
+    display: block;
+    text-align: center;
+}
+
+.custom-form .row form {
+    width: 30%;
+    margin: 25px auto;
+}
+
+.custom-form button {
+    width: 100%;
 }

@@ -14,13 +14,12 @@ router.get("/", function(req, res){
 
 //show register form
 router.get("/register", function(req, res){
-    res.render("register");
+    res.render("register", {page: 'register'});
 });
 
 router.post("/register", function(req, res){
     User.register(new User({username: req.body.username}), req.body.password, function(err, user){
         if (err) {
-            console.log(err);
             req.flash("error", err.message);
             res.redirect("/register");
         } 
@@ -33,7 +32,7 @@ router.post("/register", function(req, res){
 
 //show login form
 router.get("/login", function(req, res){
-    res.render("login");
+    res.render("login", {page: 'login'});
 });
 
 //submit login form

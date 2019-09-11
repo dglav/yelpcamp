@@ -14,6 +14,7 @@ var express     = require("express"),
     flash       = require("connect-flash"),
     User        = require("./models/user"),
     seedDB      = require("./seeds");
+    app.locals.moment = require('moment');
 
 var indexRoutes         = require("./routes/index"),
     campgroundRoutes    = require("./routes/campgrounds"),

@@ -66,10 +66,11 @@ router.get("/:id/edit", middleware.checkCampgroundOwnership, function(req, res){
         } else {
             res.render("campgrounds/edit", {campground: foundCampground});
         }
-    });    
+    });
 });
 
 router.put("/:id", middleware.checkCampgroundOwnership, function(req, res){
+    req.body.campground.createdAt = Date.now();
     Campground.updateOne({ _id: req.params.id }, req.body.campground, function(err){
         if (err) {
             req.flash("error", "Something went wrong.");

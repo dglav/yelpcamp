@@ -4,6 +4,8 @@
  *      Therefore, app.use(express.static(__dirname)); is required.
  */
 
+require('dotenv').config();
+
 var express     = require("express"),
     app         = express(),
     bodyParser  = require("body-parser"),
@@ -20,7 +22,7 @@ var indexRoutes         = require("./routes/index"),
     campgroundRoutes    = require("./routes/campgrounds"),
     commentRoutes       = require("./routes/comments");
 
-mongoose.connect(process.env.DATABASEURL, { useNewUrlParser: true });
+mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true });
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");

@@ -22,7 +22,11 @@ var indexRoutes         = require("./routes/index"),
     campgroundRoutes    = require("./routes/campgrounds"),
     commentRoutes       = require("./routes/comments");
 
+console.log("before mongoose");
+console.log(process.env.DATABASE_URL);
+console.log(typeof(process.env.DATABASE_URL));
 mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true });
+console.log("after mongoose");
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");

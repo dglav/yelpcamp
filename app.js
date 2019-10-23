@@ -4,42 +4,39 @@
  *      Therefore, app.use(express.static(__dirname)); is required.
  */
 
-require('dotenv').config();
+require("dotenv").config();
 
-var express     = require("express"),
-    app         = express(),
-    bodyParser  = require("body-parser"),
-    mongoose    = require("mongoose"),
-    passport    = require("passport"),
-    LocalStrategy = require("passport-local"),
-    methodOverride = require("method-override"),
-    flash       = require("connect-flash"),
-    User        = require("./models/user"),
-    seedDB      = require("./seeds");
-    app.locals.moment = require('moment');
+var express = require("express"),
+  app = express(),
+  bodyParser = require("body-parser"),
+  mongoose = require("mongoose"),
+  passport = require("passport"),
+  LocalStrategy = require("passport-local"),
+  methodOverride = require("method-override"),
+  flash = require("connect-flash"),
+  User = require("./models/user");
 
-var indexRoutes         = require("./routes/index"),
-    campgroundRoutes    = require("./routes/campgrounds"),
-    commentRoutes       = require("./routes/comments");
+app.locals.moment = require("moment");
 
-console.log("before mongoose");
-console.log(process.env.DATABASE_URL);
-console.log(typeof(process.env.DATABASE_URL));
+var indexRoutes = require("./routes/index"),
+  campgroundRoutes = require("./routes/campgrounds"),
+  commentRoutes = require("./routes/comments");
+
 mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true });
-console.log("after mongoose");
 
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.use(express.static(__dirname));
 app.use(flash());
-// seedDB();
 
 // Auth Configuration
-app.use(require("express-session")({
+app.use(
+  require("express-session")({
     secret: "mindtrips are trippy",
     resave: false,
     saveUninitialized: false
-}));
+  })
+);
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -51,11 +48,11 @@ passport.deserializeUser(User.deserializeUser());
 app.use(methodOverride("_method"));
 
 // Make current user a global variable in locals
-app.use(function(req, res, next){
-    res.locals.currentUser = req.user;
-    res.locals.success = req.flash("success");
-    res.locals.error = req.flash("error");
-    next();
+app.use(function(req, res, next) {
+  res.locals.currentUser = req.user;
+  res.locals.success = req.flash("success");
+  res.locals.error = req.flash("error");
+  next();
 });
 
 // Allow for shorter routes in each of the routes files below
@@ -65,12 +62,11 @@ app.use("/campgrounds/:id/comments", commentRoutes);
 
 let port = process.env.PORT;
 if (port == null || port == "") {
-    port = 3000;
+  port = 3000;
 }
-app.listen(port, function(){
-    console.log("Yelpcamp server has started!");
+app.listen(port, function() {
+  console.log("Yelpcamp server has started!");
 });
-
 
 // RESTFUL ROUTES
 

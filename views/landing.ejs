@@ -1,37 +1,40 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>YelpCamp</title>
-        <link rel="stylesheet" href="/public/stylesheets/bootstrap.min.css"/>
-        <link rel="stylesheet" href="/public/stylesheets/landing.css">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js" type="text/javascript"></script>
-    </head>
-    <body>
-        <div class="container">
-            <% if (error.length > 0) { %>
-                <div class="alert alert-danger">
-                    <p><%= error %></p>
-                </div>
-            <% } %>
-            <% if (success.length > 0) { %>
-                <div class="alert alert-success">
-                    <p><%= success %></p>
-                </div>
-            <% } %>
+
+<head>
+    <title>YelpCamp</title>
+    <link rel="stylesheet" href="/public/stylesheets/bootstrap.min.css" />
+    <link rel="stylesheet" href="/public/stylesheets/landing.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <div class="container">
+        <% if (error.length > 0) { %>
+        <div class="alert alert-danger">
+            <p><%= error %></p>
         </div>
-
-        <div id="landing-header">
-            <h1>Landing Page</h1>
-            <a href="/campgrounds" class="btn btn-primary btn-large">See Campgrounds</a>
+        <% } %>
+        <% if (success.length > 0) { %>
+        <div class="alert alert-success">
+            <p><%= success %></p>
         </div>
+        <% } %>
+    </div>
 
-        <ul class="slideshow">
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-        </ul>
+    <div id="landing-header">
+        <h1>Welcome to Yelpcamp</h1>
+        <a href="/campgrounds" class="btn btn-primary btn-large">See Campgrounds</a>
+    </div>
 
-    </body>
+    <ul class="slideshow">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+
+</body>
+
 </html>

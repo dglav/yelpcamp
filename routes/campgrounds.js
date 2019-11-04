@@ -21,85 +21,85 @@ var Comment = require("../models/comment");
 var middleware = require("../middleware");
 
 // Campground root page
-router.get("/", function(req, res){
+router.get("/", function (req, res) {
     // Get all campgrounds from db
     Campground.find({}, (err, allCampgrounds) => {
         if (err) {
             console.log(err);
         } else {
-            res.render("campgrounds/index", { campgrounds:allCampgrounds, currentUser:req.user });
+            res.render("campgrounds/index", { campgrounds: allCampgrounds, currentUser: req.user });
         }
     });
 });
 
 // New campground form
-router.get("/new", middleware.isLoggedIn, function(req, res){
+router.get("/new", middleware.isLoggedIn, function (req, res) {
     res.render("campgrounds/new");
 });
 
 // New campground post route
-router.post("/", middleware.isLoggedIn, function(req, res){
-    geocoder.geocode(req.body.location, function(err, data){
+router.post("/", middleware.isLoggedIn, function (req, res) {
+    geocoder.geocode(req.body.location, function (err, data) {
         if (err || !data.length) {
             req.flash('error', 'Invalid address');
             return res.redirect('back');
-        }
-    });
-
-    var newCampground = {
-        name: req.body.name, 
-        price: req.body.price,
-        image: req.body.image,
-        location: data[0].formattedAddress,
-        lat: data[0].latitude,
-        lon: data[0].longitude, 
-        description: req.body.description,
-        author: {
-            id: req.user._id,
-            username: req.user.username
-        }
-    };
-
-    Campground.create(newCampground, (err, newCampground) => {
-        if (err) {
-            console.log(err);
-            req.flash("error", "Something went wrong.");
         } else {
-            req.flash("success", "Added campground!");
-            res.redirect("/campgrounds");
+            var newCampground = {
+                name: req.body.name,
+                price: req.body.price,
+                image: req.body.image,
+                location: data[0].formattedAddress,
+                lat: data[0].latitude,
+                lon: data[0].longitude,
+                description: req.body.description,
+                author: {
+                    id: req.user._id,
+                    username: req.user.username
+                }
+            }
+
+            Campground.create(newCampground, (err, newCampground) => {
+                if (err) {
+                    console.log(err);
+                    req.flash("error", "Something went wrong.");
+                } else {
+                    req.flash("success", "Added campground!");
+                    res.redirect("/campgrounds");
+                }
+            });
         }
     });
 });
 
 // Show Details
-router.get("/:id", function(req, res){
-    Campground.findById(req.params.id).populate("comments").exec(function(err, foundCampground){
+router.get("/:id", function (req, res) {
+    Campground.findById(req.params.id).populate("comments").exec(function (err, foundCampground) {
         if (err) {
             console.log(err);
             req.flash("error", err.message);
             res.redirect("/campgrounds");
         } else {
-            res.render("campgrounds/show", {campground: foundCampground});
+            res.render("campgrounds/show", { campground: foundCampground });
         }
     });
 });
 
 // EDIT
-router.get("/:id/edit", middleware.checkCampgroundOwnership, function(req, res){
-    Campground.findById(req.params.id, function(err, foundCampground){
+router.get("/:id/edit", middleware.checkCampgroundOwnership, function (req, res) {
+    Campground.findById(req.params.id, function (err, foundCampground) {
         if (err) {
             console.log(err);
             res.redirect("back");
         } else {
-            res.render("campgrounds/edit", {campground: foundCampground});
+            res.render("campgrounds/edit", { campground: foundCampground });
         }
     });
 });
 
-router.put("/:id", middleware.checkCampgroundOwnership, function(req, res){
+router.put("/:id", middleware.checkCampgroundOwnership, function (req, res) {
     var editedCampground = req.body.campground;
 
-    Campground.findById(req.params.id, function(err, foundCampground){
+    Campground.findById(req.params.id, function (err, foundCampground) {
         console.log(req.body.campground.location);
         if (err) {
             console.log(err);
@@ -107,7 +107,7 @@ router.put("/:id", middleware.checkCampgroundOwnership, function(req, res){
             return res.redirect('back');
         } else {
             if (foundCampground.location !== req.body.campground.location) {
-                geocoder.geocode(req.body.campground.location, function(err, data){
+                geocoder.geocode(req.body.campground.location, function (err, data) {
                     if (err || !data.length) {
                         console.log(err);
                         req.flash('error', 'Invalid address');
@@ -118,9 +118,9 @@ router.put("/:id", middleware.checkCampgroundOwnership, function(req, res){
                         editedCampground.lat = data[0].latitude;
                         editedCampground.lon = data[0].longitude;
                     }
-                }).then(function(){
+                }).then(function () {
                     console.log(editedCampground);
-                    Campground.updateOne({ _id: req.params.id }, editedCampground, function(err){
+                    Campground.updateOne({ _id: req.params.id }, editedCampground, function (err) {
                         if (err) {
                             console.log(err);
                             req.flash("error", "Something went wrong.");
@@ -138,14 +138,14 @@ router.put("/:id", middleware.checkCampgroundOwnership, function(req, res){
 });
 
 // DESTROY
-router.delete("/:id", middleware.checkCampgroundOwnership, function(req, res){
-    Campground.findByIdAndDelete(req.params.id, function(err, deletedCampground){
+router.delete("/:id", middleware.checkCampgroundOwnership, function (req, res) {
+    Campground.findByIdAndDelete(req.params.id, function (err, deletedCampground) {
         if (err) {
             console.log(err);
             res.redirect("/campgrounds/" + req.params.id);
         } else {
-            deletedCampground.comments.forEach(function(comment){
-                Comment.findByIdAndDelete(comment._id, function(err, deletedComment){
+            deletedCampground.comments.forEach(function (comment) {
+                Comment.findByIdAndDelete(comment._id, function (err, deletedComment) {
                     if (err) {
                         console.log(err);
                     } else {

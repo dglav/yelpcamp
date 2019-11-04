@@ -39,34 +39,40 @@ router.get("/new", middleware.isLoggedIn, function (req, res) {
 
 // New campground post route
 router.post("/", middleware.isLoggedIn, function (req, res) {
-    geocoder.geocode(req.body.location, function (err, data) {
-        if (err || !data.length) {
-            req.flash('error', 'Invalid address');
-            return res.redirect('back');
-        } else {
-            var newCampground = {
-                name: req.body.name,
-                price: req.body.price,
-                image: req.body.image,
-                location: data[0].formattedAddress,
-                lat: data[0].latitude,
-                lon: data[0].longitude,
-                description: req.body.description,
-                author: {
-                    id: req.user._id,
-                    username: req.user.username
-                }
-            }
+    var newCampground = {
+        name: req.body.name,
+        price: req.body.price,
+        image: req.body.image,
+        location: "",
+        lat: "",
+        lon: "",
+        description: req.body.description,
+        author: {
+            id: req.user._id,
+            username: req.user.username
+        }
+    }
 
-            Campground.create(newCampground, (err, newCampground) => {
-                if (err) {
-                    console.log(err);
-                    req.flash("error", "Something went wrong.");
-                } else {
-                    req.flash("success", "Added campground!");
-                    res.redirect("/campgrounds");
-                }
-            });
+    if (req.body.location) {
+        geocoder.geocode(req.body.location, function (err, data) {
+            if (err || !data.length) {
+                req.flash('error', 'Invalid address');
+                return res.redirect('back');
+            } else {
+                newCampground.location = data[0].formattedAddress;
+                newCampground.lat = data[0].latitude;
+                newCampground.lon = data[0].longitude;
+            }
+        });
+    }
+
+    Campground.create(newCampground, (err, newCampground) => {
+        if (err) {
+            console.log(err);
+            req.flash("error", "Something went wrong.");
+        } else {
+            req.flash("success", "Added campground!");
+            res.redirect("/campgrounds");
         }
     });
 });
